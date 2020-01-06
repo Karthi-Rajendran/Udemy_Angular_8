@@ -1,13 +1,16 @@
 <div class="row">
     <div class="col-xs-10">
+        <!--THe below listner was in app-shpping-edit before service were impemnted 
+            (ingredientAdded)="onIngredientAdded($event)" -->
         <app-shopping-edit></app-shopping-edit>
         <hr>
         <ul class="list-group">
             <a href="#" class="list-group-item"
                 style="cursor: pointer;"
                 *ngFor="let ingredient of ingredients">
-                {{ ingredient.name}} ({{ingredient.amount}})               
+                {{ ingredient.name}} ({{ ingredient.amount }})               
             </a>
         </ul>
     </div>
 </div>
+ 
