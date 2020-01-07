@@ -8,9 +8,11 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'PROJECT';
 
-  loadedFeature = 'recipe';
-  onNavigate(feature: string){
-    this.loadedFeature = feature;
+  // before observables: Subject operator
+  // loadedFeature = 'recipe';
+  // onNavigate(feature: string){
+  //   this.loadedFeature = feature;
+  // }
 
-  }
+
 }
