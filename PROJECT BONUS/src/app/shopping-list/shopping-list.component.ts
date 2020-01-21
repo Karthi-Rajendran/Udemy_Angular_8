@@ -1,7 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Store } from '@ngrx/store';
+
 import { Ingredient } from '../shared/ingredient.model';
-import { ShoppingListService } from './shopping-list.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
+
+import * as ShoppingListActions from './store/shopping-list.actions';
+import * as fromApp from '../store/app.reducer';
 
 @Component({
   selector: 'app-shopping-list',
@@ -10,45 +14,29 @@ import { Subscription } from 'rxjs';
 })
 export class ShoppingListComponent implements OnInit, OnDestroy {
 
-  ingredients: Ingredient[] ;
-  //observables section
+  //ngrx
+  ingredients: Observable<{ingredients: Ingredient[] }> ;
+   
+ //observables section
   private igChangeSub: Subscription;
   
-  // code before services implemnted, thsi code now be placed in services of shopping list 
-    // ingredients: Ingredient[] = [
-    //     new Ingredient('Apples', 5),
-    //     new Ingredient('Tomatoas',10)
-    //   ];
-    
-  
-
-  constructor(private slService: ShoppingListService) { }
+  constructor(//  private store: Store< { shoppingList: { ingredients: Ingredient[] }}>
+            private store: Store< fromApp.AppState>
+    ) { }
 
   ngOnInit() {
-      this.ingredients = this.slService.getIngredients();
-     // this.slService.ingredientsChanged.subscribe(
-     //observables section 
-     this.igChangeSub = this.slService.ingredientsChanged.subscribe(
-        ( ingredients: Ingredient[]) => {
-          this.ingredients = ingredients;
-        }
-      );
-  }
-
-    // code before services implemnted
-
-  // onIngredientAdded(ingredient: Ingredient){
-  //   this.ingredients.push(ingredient);
-  // }
+    //ngrx
+    this.ingredients = this.store.select('shoppingList');
+        
+  } 
 
   onEditItem(index: number){
-    this.slService.startedEditing.next(index);
-
-
-
+    // this.slService.startedEditing.next(index);
+    this.store.dispatch(new ShoppingListActions.StartEdit(index));
   }
+
   ngOnDestroy(): void{
-    this.igChangeSub.unsubscribe();
+   // this.igChangeSub.unsubscribe();
   }
 
 }

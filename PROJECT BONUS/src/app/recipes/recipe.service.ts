@@ -1,37 +1,21 @@
 
 import { EventEmitter, Injectable } from '@angular/core';
-//import { Subject } from 'rxjs';
+import { Subject } from 'rxjs';
+import { Store } from '@ngrx/store';
 
 import { Recipe } from './recipe.model';
 import { Ingredient } from '../shared/ingredient.model';
-import { ShoppingListService } from '../shopping-list/shopping-list.service';
-import { Subject } from 'rxjs';
-
- 
-
+import * as ShoppingListActions from '../shopping-list/store/shopping-list.actions';
+import * as fromApp from '../store/app.reducer';
 @Injectable()
 export class RecipeService{
   recipesChnaged = new Subject<Recipe[]>();
 
-   // recipeSelected = new EventEmitter<Recipe>();
-   //observables section
-   //recipeSelected = new Subject<Recipe>();
-    
-  // private  recipes: Recipe[] = [
-  //       new Recipe('A Test Recipe', 'This is simply a Test maybe','https://cdn.pixabay.com/photo/2016/06/15/19/09/food-1459693_960_720.jpg',
-  //       [new Ingredient('Meat',1),
-  //       new Ingredient('French Fries',20)
-  //     ]),
-  //       new Recipe('Another Test Recipe', 'This is simply a Test maybe','https://cdn-image.myrecipes.com/sites/default/files/styles/4_3_horizontal_-_1200x900/public/mrtrending0475.jpg?itok=-tA_cB-C',
-  //       [new Ingredient('Buns',2),
-  //       new Ingredient('Meat',4)])
-  //     ]; 
-
-
-  //Http section: transform response data
+   //Http section: transform response data
   private recipes: Recipe[] = [];
 
-      constructor(private slService: ShoppingListService){}
+      constructor(// private store: Store<{ shoppingList: { ingredients: Ingredient[]  }}>){}
+                 private store: Store<fromApp.AppState>){}
 
       //Http section
 
@@ -51,7 +35,8 @@ export class RecipeService{
       }
 
       addIngredientsToShoppingList(ingredients: Ingredient[]){
-          this.slService.addIngredients(ingredients);
+         // this.slService.addIngredients(ingredients);
+         this.store.dispatch(new ShoppingListActions.AddIngredients(ingredients));
       }
       
       addRecipe(recipe: Recipe){
