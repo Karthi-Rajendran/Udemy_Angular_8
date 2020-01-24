@@ -1,7 +1,18 @@
 const express = require('express');
 const bodyparser = require('body-parser');
+const mongoose = require('mongoose');
+
+const postsRoutes = require("./routes/posts");
 
 const app = express();
+
+mongoose.connect("mongodb+srv://mean-user:sdcAguPeZnKvYWyp@clustermean-h5y4k.mongodb.net/node-angular?retryWrites=true&w=majority", { useUnifiedTopology: true, useNewUrlParser: true })
+  .then(() => {
+    console.log('Connected to database!');
+  })
+  .catch(() => {
+    console.log('Connection failed!');
+  });
 
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended: false}));
@@ -15,43 +26,12 @@ app.use((req, res, next) => {
      );
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET, POST, PATCH, DELETE, OPTIONS"
+    "GET, POST, PATCH, PUT, DELETE, OPTIONS"
     );
   next();
 });
 
-//add midddleware with app keyword
-// app.use((req, res, next) => {
-//   console.log('First middleware');
-//   next(); // important, if not sending a response
-// });
-
-// app.use((req, res, next) => {
-//   res.send('Hello from express!');
-// });
-
-app.post("/api/posts", ( req, res, next) => {
-    const post = req.body;
-    console.log(post);
-    res.status(201).json({
-      message: 'Post added successfully'
-    });
-});
-
-app.get('/api/posts', (req, res, next) => {
-  const posts = [
-        { id: 'sadsfswsd',
-          title: 'First server-side post',
-          content: 'This is coming from server' },
-        { id: 'ghertdfdg',
-          title: 'Second server-side post',
-          content: 'This is coming from server !' },
-  ];
-  res.status(200).json({
-    message: "Posts fetched successfully!",
-    posts: posts
-  });
-});
+app.use("/api/posts", postsRoutes);
 
 // to export coz we have to use this app as a listener
-module.exports = app;
+  module.exports = app;
