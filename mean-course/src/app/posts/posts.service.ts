@@ -16,8 +16,7 @@ export class PostsService {
  constructor(private httpClient: HttpClient, private router: Router) {}
 
  getPosts() {
-   this.httpClient
-   .get<{ message: string, posts: any }>(
+   this.httpClient.get<{ message: string, posts: any }>(
      'http://localhost:3000/api/posts'
      )
      .pipe(map((postData) => {
@@ -26,7 +25,7 @@ export class PostsService {
             title: post.title,
             content: post.content,
             id: post._id,
-            imagePath: post.imagePath
+            //imagePath: post.imagePath
           };
         });
      })
@@ -43,7 +42,7 @@ export class PostsService {
  }
 
  getPost(id: string) {
-   return this.httpClient.get<{ _id: string, title: string, content: string, imagePath: string }>(
+   return this.httpClient.get<{ _id: string, title: string, content: string }>(
      'http://localhost:3000/api/posts/' + id);
  }
 
@@ -51,7 +50,7 @@ export class PostsService {
   const postData = new FormData();
   postData.append("title", title);
   postData.append("content", content);
-  postData.append("image", image, title);
+  //postData.append("image", image, title);
   this.httpClient.post<{ message: string, post: Post }>(
     'http://localhost:3000/api/posts', postData
     )
@@ -60,7 +59,7 @@ export class PostsService {
           id: responseData.post.id, 
           title: title,
           content: content,
-          imagePath: responseData.post.imagePath
+          //imagePath: responseData.post.imagePath
         };
         this.posts.push(post);
         this.postsUpdated.next([...this.posts]);
@@ -68,20 +67,20 @@ export class PostsService {
    });
  }
 
- updatePost(id: string, title: string, content: string, image: File | string) {
+ updatePost(id: string, title: string, content: string) {
   let postData: Post | FormData;
-  if (typeof image === 'object') {
+  if (typeof Image === 'object') {
     postData = new FormData();
     postData.append("id", id);
     postData.append("title", title);
     postData.append("content", content);
-    postData.append("image", image, title);
+   // postData.append("image", image, title);
   } else {
        postData = {
         id: id,
         title: title,
         content: content,
-        imagePath: image
+       // imagePath: image
       };
   }
   this.httpClient.put('http://localhost:3000/api/posts/' + id, postData)
@@ -92,7 +91,7 @@ export class PostsService {
         id: id,
         title: title,
         content: content,
-        imagePath: ""
+       // imagePath: ""
       };
       updatedPosts[oldPostIndex] = post;
       this.posts = updatedPosts;
